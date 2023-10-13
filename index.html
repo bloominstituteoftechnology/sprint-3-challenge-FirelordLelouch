@@ -59,8 +59,8 @@
       // ❗ WARNING: except for `getAllReversed`, methods must respect the order of the integers
       // ❗ WARNING: note that none of the methods actually mutate the `ints` property
       
-  constructor(...args) {
-    this.ints = args;
+      constructor(...ints) {
+    this.ints = ints;
   }
 
   getAll() {
@@ -68,36 +68,35 @@
   }
 
   getEvens() {
-    return this.ints.filter(num => num % 2 === 0);
+    return this.ints.filter((int) => int % 2 === 0);
   }
 
   getNegatives() {
-    return this.ints.filter(num => num < 0);
+    return this.ints.filter((int) => int < 0);
   }
 
   getAllSquared() {
-    return this.ints.map(num => num * num);
+    return this.ints.map((int) => int ** 2);
   }
 
   pop() {
     return this.ints.pop();
   }
 
-  push(num) {
-    this.ints.push(num);
+  push(int) {
+    this.ints.push(int);
     return this.ints;
   }
 
   getEveryNth(n) {
-    return this.ints.filter((_, index) => (index + 1) % n === 0);
+    return this.ints.filter((_, i) => i % n === 0);
   }
 
   getAllReversed() {
-    return this.ints.slice().reverse();
+    return [...this.ints].reverse();
   }
-
-
-    }
+}
+    
 
     // 👉 CHALLENGE 2 NerfGun
     class NerfGun {
@@ -183,7 +182,7 @@
     }
 
     // 👉 CHALLENGE 4 AntFarm
-    class AntFarm {
+    
       // 🧠 Constructor takes **any** number of arguments, which are strings: the names of your ants
       // 🧠 Instances of AntFarm have an `ants` property holding an array of ants:
       //      * Each ant is an object with a `name` prop and a `health` prop that starts at 100
@@ -214,27 +213,48 @@
       //      console.log(list) // prints ["a"]
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
-      constructor(...antNames) {
+      class AntFarm {
+  constructor(...antNames) {
     this.ants = antNames.map(name => ({ name, health: 100 }));
   }
 
   work() {
-    if (this.ants.length === 0) {
-      return "No ants here. Did you work them to death?";
-    }
-    this.ants = this.ants.map(ant => ({ ...ant, health: ant.health - 20 })).filter(ant => ant.health > 0);
-    return `${this.ants.length} ants starting work!`;
+  if (this.ants.length === 0) {
+    return "No ants here. Did you work them to death?";
   }
+
+  let initialAntCount = this.ants.length; 
+
+  this.ants = this.ants.map(ant => {
+    ant.health -= 20;
+    return ant;
+  });
+
+  this.ants = this.ants.filter(ant => ant.health > 0);
+
+  return `${initialAntCount} ants starting work!`; 
+}
 
   feed(name) {
     const matchingAnts = this.ants.filter(ant => ant.name === name);
     if (matchingAnts.length === 0) {
       return `${name} not found!`;
     }
-    this.ants = this.ants.map(ant => (ant.name === name ? { ...ant, health: ant.health + 15 } : ant));
+
+    this.ants = this.ants.map(ant => {
+      if (ant.name === name) {
+        ant.health += 15;
+      }
+      return ant;
+    });
+
     return "Yum!";
   }
-    }
+}
+
+// array1 = array1.map((x) => x + 2)
+
+    
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
@@ -441,7 +461,7 @@
           return [description, expected, actual]
         },
         function () {
-          let actual, description = 'Working substracts 20 health points'
+          let actual, description = 'Working subtracts 20 health points'
           let expected = [
             { name: 'Jess', health: 80 }, { name: 'Blake', health: 80 }, { name: 'Jess', health: 80 }
           ]
